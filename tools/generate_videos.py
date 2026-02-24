@@ -51,7 +51,7 @@ MODELS = {
         'max_prompt_length': 10000,
         'default_mode': 'std',
         'default_aspect_ratio': '9:16',
-        'default_duration': '10',
+        'default_duration': '5',
         'supports_watermark_removal': True,
         'api_type': 'kling3',  # API type for payload formatting
         'description': 'Kling 3.0 Standard - Standard resolution video generation'
@@ -62,7 +62,7 @@ MODELS = {
         'max_prompt_length': 10000,
         'default_mode': 'pro',
         'default_aspect_ratio': '9:16',
-        'default_duration': '10',
+        'default_duration': '5',
         'supports_watermark_removal': True,
         'api_type': 'kling3',  # API type for payload formatting
         'description': 'Kling 3.0 Pro - Higher resolution video generation'
