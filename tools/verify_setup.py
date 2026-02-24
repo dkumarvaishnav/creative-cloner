@@ -10,6 +10,11 @@ import os
 import subprocess
 from pathlib import Path
 
+# Fix Windows console encoding for emojis
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+
+
 def check_python_version():
     """Check Python version is 3.8+"""
     print("🐍 Checking Python version...")
