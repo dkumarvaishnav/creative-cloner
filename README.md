@@ -111,11 +111,19 @@ Creates images from prompts using AI generation.
 # Always dry-run first
 python tools/generate_videos.py --dry-run
 
-# Generate videos
+# Generate videos with Sora 2
 python tools/generate_videos.py --model sora-2 --duration 10
 # Cost: ~$0.50/video (10s)
+
+# Generate with Kling 3.0 Standard (recommended)
+python tools/generate_videos.py --model kling-3.0-std
+# Cost: ~$0.80/video
+
+# Generate with Kling 3.0 Pro (higher quality)
+python tools/generate_videos.py --model kling-3.0-pro
+# Cost: ~$1.50/video
 ```
-Animates images into videos.
+Animates images into videos using AI models.
 
 ### Step 4: Combine Videos
 ```bash
@@ -139,10 +147,16 @@ Stitches all videos into final output.
 - Test: $0.008 (z-image) + $1.00 (videos) = **$1.01**
 - Production: $0.18 (nano-banana-pro) + $1.00 (videos) = **$1.18**
 
-**Models:**
-- `z-image`: $0.004/image (testing)
-- `nano-banana-pro`: $0.09/image (production)
-- `sora-2`: ~$0.50/video (10s or 15s)
+**Image Models:**
+- `z-image`: $0.004/image (testing, no reference image support)
+- `nano-banana-pro`: $0.09/image (production, supports reference images)
+
+**Video Models:**
+- `sora-2`: ~$0.50/video (10s or 15s, OpenAI Sora 2)
+- `kling-3.0-std`: ~$0.80/video (Kling 3.0 Standard)
+- `kling-3.0-pro`: ~$1.50/video (Kling 3.0 Pro, higher quality)
+
+**Other:**
 - `combine_all.py`: FREE (local FFmpeg)
 
 ---

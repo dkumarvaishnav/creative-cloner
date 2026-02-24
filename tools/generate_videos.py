@@ -41,7 +41,31 @@ MODELS = {
         'default_aspect_ratio': 'landscape',
         'default_duration': '10',  # 10 seconds
         'supports_watermark_removal': True,
-        'frame_options': ['10', '15']  # 10s or 15s
+        'frame_options': ['10', '15'],  # 10s or 15s
+        'api_type': 'sora',  # API type for payload formatting
+        'description': 'OpenAI Sora 2 - Image-to-video, good quality'
+    },
+    'kling-3.0-std': {
+        'name': 'kling-3.0/video',
+        'cost': 0.80,  # Approximate cost - verify with Kie.ai
+        'max_prompt_length': 10000,
+        'default_mode': 'std',
+        'default_aspect_ratio': '9:16',
+        'default_duration': '10',
+        'supports_watermark_removal': True,
+        'api_type': 'kling3',  # API type for payload formatting
+        'description': 'Kling 3.0 Standard - Standard resolution video generation'
+    },
+    'kling-3.0-pro': {
+        'name': 'kling-3.0/video',
+        'cost': 1.50,  # Approximate cost - verify with Kie.ai (pro mode costs more)
+        'max_prompt_length': 10000,
+        'default_mode': 'pro',
+        'default_aspect_ratio': '9:16',
+        'default_duration': '10',
+        'supports_watermark_removal': True,
+        'api_type': 'kling3',  # API type for payload formatting
+        'description': 'Kling 3.0 Pro - Higher resolution video generation'
     }
 }
 
@@ -154,42 +178,78 @@ def truncate_prompt(prompt, max_length=10000):
 def create_video_generation_task(prompt, image_url, model_name, api_key, model_config,
                                    aspect_ratio='landscape', n_frames='10', remove_watermark=True):
     """
-    Create video generation task on Kie.ai using Sora 2
+    Create video generation task on Kie.ai
+    Supports multiple models: Sora 2, Kling 3.0, etc.
 
     Returns: taskId (str)
     """
     print(f"\n🎬 Creating video generation task...")
     print(f"   Model: {model_name}")
-    print(f"   Image URL: {image_url[:60]}...")
-    print(f"   Aspect Ratio: {aspect_ratio}")
-    print(f"   Duration: {n_frames}s")
 
-    # Truncate prompt if needed for model limits
-    max_prompt_length = model_config.get('max_prompt_length', 10000)
-    original_length = len(prompt)
-    if original_length > max_prompt_length:
-        prompt = truncate_prompt(prompt, max_prompt_length)
-        print(f"   ⚠️  Prompt truncated: {original_length} → {len(prompt)} chars")
+    # Get API type to determine payload format
+    api_type = model_config.get('api_type', 'sora')
 
     headers = {
         'Authorization': f'Bearer {api_key}',
         'Content-Type': 'application/json'
     }
 
-    # Build payload for Sora 2
-    payload = {
-        'model': model_name,
-        'input': {
-            'prompt': prompt,
-            'image_urls': [image_url],
-            'aspect_ratio': aspect_ratio,
-            'n_frames': str(n_frames),
-            'remove_watermark': remove_watermark,
-            'upload_method': 's3'
-        }
-    }
+    # Build payload based on API type
+    if api_type == 'kling3':
+        # Kling 3.0 uses a specific format with multi_shots, sound, and other parameters
+        mode = model_config.get('default_mode', 'std')
+        print(f"   Mode: {mode}")
+        print(f"   Image URL: {image_url[:60]}...")
+        print(f"   Aspect Ratio: {aspect_ratio}")
+        print(f"   Duration: {n_frames}s")
 
-    print(f"   Prompt length: {len(prompt)} chars")
+        # Truncate prompt if needed
+        max_prompt_length = model_config.get('max_prompt_length', 10000)
+        original_length = len(prompt)
+        if original_length > 500:  # Kling 3.0 has 500 char limit per prompt
+            prompt = truncate_prompt(prompt, 500)
+            print(f"   ⚠️  Prompt truncated: {original_length} → {len(prompt)} chars")
+
+        payload = {
+            'model': model_name,
+            'input': {
+                'multi_shots': False,  # Single shot mode for image-to-video
+                'image_urls': [image_url],
+                'duration': str(n_frames),
+                'aspect_ratio': aspect_ratio,
+                'mode': mode,
+                'sound': True,  # Enable sound generation
+                'prompt': prompt
+            }
+        }
+        print(f"   Prompt length: {len(prompt)} chars")
+
+    else:
+        # Sora 2 and similar models use full parameters
+        print(f"   Image URL: {image_url[:60]}...")
+        print(f"   Aspect Ratio: {aspect_ratio}")
+        print(f"   Duration: {n_frames}s")
+
+        # Truncate prompt if needed for model limits
+        max_prompt_length = model_config.get('max_prompt_length', 10000)
+        original_length = len(prompt)
+        if original_length > max_prompt_length:
+            prompt = truncate_prompt(prompt, max_prompt_length)
+            print(f"   ⚠️  Prompt truncated: {original_length} → {len(prompt)} chars")
+
+        payload = {
+            'model': model_name,
+            'input': {
+                'prompt': prompt,
+                'image_urls': [image_url],
+                'aspect_ratio': aspect_ratio,
+                'n_frames': str(n_frames),
+                'remove_watermark': remove_watermark,
+                'upload_method': 's3'
+            }
+        }
+        print(f"   Prompt length: {len(prompt)} chars")
+
     print(f"   Payload: {json.dumps(payload, indent=2)}")
 
     try:
@@ -368,11 +428,22 @@ def download_video(video_url, output_path):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Generate videos from images using Sora 2 via Kie.ai API'
+        description='Generate videos from images using AI models via Kie.ai API',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''
+Available Models:
+  sora-2           OpenAI Sora 2 - Image-to-video (~$0.50/10s)
+  kling-3.0-std    Kling 3.0 Standard - Standard resolution (~$0.80)
+  kling-3.0-pro    Kling 3.0 Pro - Higher resolution (~$1.50)
+
+Example Usage:
+  python generate_videos.py --model kling-3.0-std --project-name "My Project"
+  python generate_videos.py --model sora-2 --duration 10 --skip-approval
+        '''
     )
     parser.add_argument(
         '--model',
-        choices=['sora-2'],
+        choices=['sora-2', 'kling-3.0-std', 'kling-3.0-pro'],
         default='sora-2',
         help='Model to use for video generation (default: sora-2)'
     )
