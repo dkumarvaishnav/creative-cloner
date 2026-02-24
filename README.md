@@ -166,7 +166,3 @@ python tools/combine_all.py --music inputs/background.mp3
 # Total cost: ~$1.00 for 2 scenes
 # Total time: ~10 minutes
 ```
-
----
-
-Happy creating! 🎬✨
