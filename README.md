@@ -202,3 +202,78 @@ python tools/combine_all.py --music inputs/background.mp3
 # Total cost: ~$1.00 for 2 scenes
 # Total time: ~10 minutes
 ```
+
+---
+
+## 🤖 Using as a Claude Code Skill
+
+Creative Cloner is packaged as a **Claude Code Cloud Skill** for easy sharing and reuse.
+
+### What's a Cloud Skill?
+
+A self-contained workflow that Claude Code can execute autonomously with:
+- Complete documentation in [`.agent/skills/creative-cloner/SKILL.md`](.agent/skills/creative-cloner/SKILL.md)
+- All API integrations (Gemini, Kie.ai, Airtable)
+- Safety rules and cost approvals
+- Step-by-step guidance
+
+### Quick Install (For Others)
+
+Anyone can use your skill:
+
+```bash
+# Clone the repository
+git clone https://github.com/dkumarvaishnav/creative-cloner.git
+cd creative-cloner
+
+# Install and verify
+pip install -r requirements.txt
+cp .env.example .agent/.env
+# Edit .agent/.env with your API keys
+python tools/verify_setup.py
+```
+
+### Using with Claude Code
+
+1. **Open Claude Code in project directory:**
+   ```bash
+   claude-code
+   ```
+
+2. **Ask Claude for help:**
+   ```
+   "Help me clone a viral video using Creative Cloner"
+   ```
+
+3. **Claude will:**
+   - Read the SKILL.md documentation
+   - Guide you through each step
+   - Warn about costs before spending
+   - Execute commands with your approval
+   - Handle errors and retries
+
+### Sharing Your Skill
+
+**Share via GitHub:**
+- Repository: https://github.com/dkumarvaishnav/creative-cloner
+- Skill Docs: [`.agent/skills/creative-cloner/SKILL.md`](.agent/skills/creative-cloner/SKILL.md)
+
+**For complete details on sharing, installing, and using as a cloud skill:**
+📖 **[Read the Cloud Skill Guide](CLOUD_SKILL_GUIDE.md)**
+
+Topics covered:
+- Installing from GitHub
+- Using in Claude Code
+- Forking and customizing
+- Publishing to cloud registry (future)
+- Distribution strategies
+- Monetization options
+
+---
+
+## 📚 Documentation
+
+- **[README.md](README.md)** - Quick start and workflow steps (this file)
+- **[SKILL.md](.agent/skills/creative-cloner/SKILL.md)** - Complete skill documentation for Claude Code
+- **[CLOUD_SKILL_GUIDE.md](CLOUD_SKILL_GUIDE.md)** - Sharing and using as a cloud skill
+- **[LICENSE](LICENSE)** - MIT License
