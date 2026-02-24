@@ -1,0 +1,44 @@
+# Development Documentation
+docs/
+
+# API Keys and Environment Files
+.agent/
+.env
+*.env
+
+# Claude Code Session Data
+.claude/
+
+# User Input Files
+inputs/
+
+# Generated Output Files
+outputs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary Files
+*.tmp
+*.log
+*.cache

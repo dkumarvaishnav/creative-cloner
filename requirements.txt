@@ -1,0 +1,10 @@
+# Video Analysis Dependencies
+google-genai>=0.3.0
+python-dotenv>=1.0.0
+pyyaml>=6.0
+
+# Airtable Integration
+pyairtable>=2.3.0
+
+# Kie.ai Integration
+requests>=2.28.0
