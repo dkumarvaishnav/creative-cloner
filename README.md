@@ -10,22 +10,55 @@ Recreate viral videos with your own products or characters using AI.
 
 ### Prerequisites
 - Python 3.8+
+- FFmpeg (for video combining - see installation below)
 - API keys for Gemini, Kie.ai, and Airtable
-- FFmpeg (for video combining)
 
 ### Installation
 
+#### 1. Install FFmpeg
+
+**Windows:**
 ```bash
-# 1. Install dependencies
+# Download from: https://ffmpeg.org/download.html
+# Extract and add to PATH, then verify:
+ffmpeg -version
+```
+
+**Mac:**
+```bash
+brew install ffmpeg
+```
+
+**Linux:**
+```bash
+sudo apt-get install ffmpeg
+```
+
+#### 2. Install Python Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-# 2. Set up environment (.agent/.env)
-GEMINI_API_KEY=your_key
-KIE_API_KEY=your_key
-AIRTABLE_API_TOKEN=your_token
+#### 3. Set Up Environment Variables
+
+```bash
+# Copy the example file
+cp .env.example .agent/.env
+
+# Edit .agent/.env and add your API keys:
+GEMINI_API_KEY=your_gemini_key
+KIE_API_KEY=your_kie_key
+AIRTABLE_API_TOKEN=your_airtable_token
 AIRTABLE_BASE_ID=your_base_id
+```
 
-# 3. Set up Airtable table with fields:
+**Get your API keys:**
+- Gemini: https://ai.google.dev/
+- Kie.ai: https://kie.ai/api-key
+- Airtable: https://airtable.com/account
+
+# 4. Set up Airtable table with fields:
 # - scene_number (Number)
 # - scene_description (Long text)
 # - image_prompt (Long text)
@@ -33,6 +66,9 @@ AIRTABLE_BASE_ID=your_base_id
 # - start_image (Attachment)
 # - scene_video (Attachment)
 # - project_name (Single line text)
+
+# 5. Verify setup
+python tools/verify_setup.py
 ```
 
 ---
