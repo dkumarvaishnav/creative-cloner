@@ -2,7 +2,8 @@
 docs/
 
 # API Keys and Environment Files
-.agent/
+.agent/.env
+.agent/*.env
 .env
 *.env
 
